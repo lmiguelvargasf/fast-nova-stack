@@ -1,32 +1,30 @@
-from litestar import Litestar, asgi, get
-from litestar.types import Receive, Scope, Send
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 from piccolo.apps.user.tables import BaseUser
 from piccolo_admin.endpoints import create_admin
-from pydantic import BaseModel
-from strawberry.litestar import make_graphql_controller
+from strawberry.fastapi import GraphQLRouter
 
 from .db import close_database_connection_pool, open_database_connection_pool
 from .schema import schema
 
 
-@asgi("/admin/", is_mount=True, copy_scope=False)
-async def admin(scope: Scope, receive: Receive, send: Send) -> None:
-    await create_admin(tables=[BaseUser])(scope, receive, send)  # type: ignore[arg-type]
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    open_database_connection_pool()
+    yield
+    close_database_connection_pool()
 
 
-class HealthStatus(BaseModel):
-    status: str
+app = FastAPI(lifespan=lifespan)
+graphql_app = GraphQLRouter(schema, path="/graphql")
+app.include_router(graphql_app)
 
 
-@get("/health")
-async def health_check() -> HealthStatus:
-    return HealthStatus(status="ok")
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 
-GraphQLController = make_graphql_controller(schema=schema, path="/graphql")
-
-app = Litestar(
-    route_handlers=[admin, health_check, GraphQLController],
-    on_startup=[open_database_connection_pool],
-    on_shutdown=[close_database_connection_pool],
-)
+admin = create_admin(tables=[BaseUser])
+app.mount("/admin/", admin)

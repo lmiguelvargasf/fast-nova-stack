@@ -51,7 +51,6 @@ addopts = "--cov=src"
 omit = [
     "src/backend/config/piccolo*.py",
 ]
-
 [tool.pyrefly]
 python-version = "3.13"
 project-includes = ["src"]
