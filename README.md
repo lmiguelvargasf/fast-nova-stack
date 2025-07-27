@@ -26,7 +26,7 @@ A modern full-stack application template built for quick and efficient project s
 
 ### Backend
 - **[Python][python]** – Core programming language for backend.
-- **[Litestar][litestar]** – High-performance ASGI framework for modern Python web apps.
+- **[FastAPI][fastapi]** – A modern, fast (high-performance), web framework for building APIs with Python.
 - **[Piccolo][piccolo]** – Async ORM and query builder with migration support.
 - **[PostgreSQL][postgresql]** – Advanced open-source relational database known for reliability.
 - **[GraphQL][graphql]** – API query language providing a more efficient alternative to REST.
@@ -171,8 +171,8 @@ This project is licensed under the [MIT License](./LICENSE).
 
 [chartjs]: https://www.chartjs.org/
 [docker-desktop]: https://www.docker.com/products/docker-desktop/
+[fastapi]: https://fastapi.tiangolo.com/
 [graphql]: https://graphql.org/
-[litestar]: https://litestar.dev/
 [nextjs]: https://nextjs.org/
 [piccolo]: https://piccolo-orm.com/
 [postgresql]: https://www.postgresql.org/
