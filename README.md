@@ -1,4 +1,4 @@
-# Fast Nova Stack 🌟
+# Fast Nova Stack 💫
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.13-blue?style=for-the-badge&logo=python)
