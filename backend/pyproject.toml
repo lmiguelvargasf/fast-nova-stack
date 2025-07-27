@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi[standard]>=0.115.12",
     "litestar[standard]>=2.15.2",
     "loguru>=0.7.3",
     "piccolo-admin>=1.9.1",
