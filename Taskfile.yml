@@ -30,7 +30,8 @@ tasks:
 
   docker:down:volumes:
     desc: Stop all services and remove volumes
-    aliases: [docker:down:v]
+    aliases:
+      - docker:down:v
     cmds:
       - "{{.DOCKER_COMPOSE}} down -v"
 
@@ -135,3 +136,28 @@ tasks:
           -w /app \
           $(docker build -q -t frontend-deps-tool -f frontend/Dockerfile frontend) \
           bash
+
+  frontend:all:
+    desc: Run all frontend checks
+    cmds:
+      - task: frontend:lint
+      - task: frontend:format
+      - task: frontend:check
+      - task: frontend:test:run
+      - task: frontend:test:e2e
+      - task: frontend:codegen
+      - task: frontend:storybook:build
+
+  backend:all:
+    desc: Run all backend checks
+    cmds:
+      - task: backend:lint:fix
+      - task: backend:format
+      - task: backend:test:cov:html
+      - task: backend:typecheck
+
+  all:
+    desc: Run all checks
+    cmds:
+      - task: backend:all
+      - task: frontend:all
