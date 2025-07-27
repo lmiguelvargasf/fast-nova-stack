@@ -2,7 +2,7 @@ from piccolo.apps.user.tables import BaseUser
 
 
 class TestUserQueries:
-    async def test_get_user_by_id(self, mocker, graphql_client):
+    def test_get_user_by_id(self, mocker, graphql_client):
         mock_objects = mocker.patch.object(BaseUser, "objects")
         mock_user = BaseUser(
             id=1,
@@ -25,7 +25,7 @@ class TestUserQueries:
         }
         """
 
-        result = await graphql_client.query(query, variables={"id": "1"})
+        result = graphql_client.query(query, variables={"id": "1"})
 
         assert "errors" not in result
         assert "data" in result
@@ -43,7 +43,7 @@ class TestUserQueries:
 
         mock_objects.return_value.get.assert_called_once()
 
-    async def test_get_user_by_id_not_found(self, mocker, graphql_client):
+    def test_get_user_by_id_not_found(self, mocker, graphql_client):
         mock_objects = mocker.patch.object(BaseUser, "objects")
         mock_objects.return_value.get = mocker.AsyncMock(return_value=None)
 
@@ -56,7 +56,7 @@ class TestUserQueries:
         }
         """
 
-        result = await graphql_client.query(query, variables={"id": "999"})
+        result = graphql_client.query(query, variables={"id": "999"})
 
         assert "errors" in result
         assert len(result["errors"]) == 1

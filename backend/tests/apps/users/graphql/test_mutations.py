@@ -2,7 +2,7 @@ from piccolo.apps.user.tables import BaseUser
 
 
 class TestUserMutations:
-    async def test_create_user_success(self, mocker, graphql_client):
+    def test_create_user_success(self, mocker, graphql_client):
         # Setup mock to return no existing user
         mock_objects = mocker.patch.object(BaseUser, "objects")
         mock_get = mocker.AsyncMock(return_value=None)
@@ -36,7 +36,7 @@ class TestUserMutations:
                 "email": "new@example.com",
             }
         }
-        result = await graphql_client.mutation(mutation, variables=variables)
+        result = graphql_client.mutation(mutation, variables=variables)
 
         assert "data" in result
         assert "createUser" in result["data"]
@@ -52,7 +52,7 @@ class TestUserMutations:
         mock_get.assert_called_once()
         mock_save.assert_called_once()
 
-    async def test_create_user_already_exists(self, mocker, graphql_client):
+    def test_create_user_already_exists(self, mocker, graphql_client):
         mock_objects = mocker.patch.object(BaseUser, "objects")
         existing_user = BaseUser(
             id=1,
@@ -81,7 +81,7 @@ class TestUserMutations:
             }
         }
 
-        result = await graphql_client.mutation(mutation, variables=variables)
+        result = graphql_client.mutation(mutation, variables=variables)
 
         assert "errors" in result
         assert len(result["errors"]) == 1

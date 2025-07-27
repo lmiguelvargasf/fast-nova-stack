@@ -11,9 +11,11 @@ from .schema import schema
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    open_database_connection_pool()
+    await open_database_connection_pool()
+    admin = create_admin(tables=[BaseUser])
+    app.mount("/admin/", admin)
     yield
-    close_database_connection_pool()
+    await close_database_connection_pool()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -24,7 +26,3 @@ app.include_router(graphql_app)
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-
-admin = create_admin(tables=[BaseUser])
-app.mount("/admin/", admin)

@@ -1,9 +1,8 @@
-from litestar import Litestar
-from litestar.status_codes import HTTP_200_OK
-from litestar.testing import AsyncTestClient
+from fastapi import status
+from fastapi.testclient import TestClient
 
 
-async def test_health_check(test_client: AsyncTestClient[Litestar]) -> None:
-    response = await test_client.get("/health")
-    assert response.status_code == HTTP_200_OK
+def test_health_check(test_client: TestClient) -> None:
+    response = test_client.get("/health")
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"status": "ok"}

@@ -4,15 +4,19 @@ in piccolo_admin itself. Remove this test once actual application-specific
 tests involving database transactions are implemented.
 """
 
-from typing import ClassVar
-
+import pytest
 from piccolo.apps.user.tables import BaseUser
-from piccolo.testing.test_case import AsyncTableTest
+from piccolo.table import create_db_tables, drop_db_tables
 
 
-class TestBaseUser(AsyncTableTest):
-    tables: ClassVar[list] = [BaseUser]
+@pytest.fixture(scope="function", autouse=True)
+async def db_tables():
+    await create_db_tables(BaseUser, if_not_exists=True)
+    yield
+    await drop_db_tables(BaseUser)
 
+
+class TestBaseUser:
     async def test_create_user(self) -> None:
         test_username = "test@example.com"
         test_password = "TestPassword123"
